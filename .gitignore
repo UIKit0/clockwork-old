@@ -1,0 +1,9 @@
+# Compiled binary files aren't necessary but the 'bin' folder is required during compilation.
+bin/*
+
+# Ignore everything until source code, assets, and documentation are properly licensed.
+assets/*
+doc/*
+src/*
+tst/*
+lib/*
