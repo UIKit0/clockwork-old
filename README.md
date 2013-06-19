@@ -10,9 +10,9 @@ ironed out, although I assure you that none of them will attempt to find the
 answer to life, launch nuclear ABMs or, more realistically, destroy the
 content of your hard drive.
 
-Check out the __jsr.implementation.pdf__ document for a detailed
-description of the application's features and their implementations, as
-well as what and what not to expect from JSR.
+Check out __jsr.implementation.pdf__ included in the software documentation for
+a detailed description of the application's features and their implementations,
+as well as what you can expect from JSR.
 
 
 Execution
@@ -23,8 +23,8 @@ installed on the target computer. The source code can also be compiled and
 executed like any other java application.
 
 
-Hierarchy
----------
+Layout
+------
 The folders provided with this software are structured in the following manner:
 * __assets__ contains icons, mesh data and textures.
 * __bin__ contains compiled bytecode.
