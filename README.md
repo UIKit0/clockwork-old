@@ -26,10 +26,10 @@ The source code can also be compiled and executed like any other Java applicatio
 Layout
 ------
 The folders provided with this software are structured in the following manner
-* __assets__ contains icons, mesh data and textures.
+* __assets__ contains icons and sample models.
 * __bin__ contains compiled Java bytecode.
 * __dist__ contains a JAR file of the application.
-* __doc__ contains the software documentation.
+* __doc__ contains research, design and implementation documentation, as well as the Javadoc.
 * __lib__ contains external libraries that this application depends on.
 * __src__ contains the source code tree.
 * __tst__ contains unit tests.
