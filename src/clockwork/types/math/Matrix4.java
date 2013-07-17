@@ -142,7 +142,7 @@ public final class Matrix4
 	{
 		final Point4f result = new Point4f();
 		final double pointdata[] = point.getXYZW();
-		final double newdata[] = new double[]{0.0f, 0.0f, 0.0f, 0.0f};
+		final double newdata[] = new double[]{0.0, 0.0, 0.0, 0.0};
 
 		for (int i = 0; i < 4; ++i)
 		{
@@ -153,37 +153,21 @@ public final class Matrix4
 		return result;
 	}
 	/**
-	 * Multiply this matrix with a 3D point.
-	 */
-	public Point3f multiply(final Point3f point)
-	{
-		final Point3f result = new Point3f();
-		final double pointdata[] = point.getXYZW();
-		final double newdata[] = new double[]{0.0f, 0.0f, 0.0f, 0.0f};
-
-		for (int i = 0; i < 4; ++i)
-		{
-			for (int j = 0; j < 4; ++j)
-				newdata[i] += get(i, j) * pointdata[j];
-		}
-		result.setXYZW(newdata);
-		return result;
-	}
-	/**
-	 * Multiply this matrix with a 3D vector.
+	 * Multiply this matrix's upper 3x3 submatrix with a 3D vector.
+	 * @param vector the vector to multiply.
 	 */
 	public Vector3f multiply(final Vector3f vector)
 	{
 		final Vector3f result = new Vector3f();
-		final double vectordata[] = vector.getIJKL();
-		final double newdata[] = new double[]{0.0f, 0.0f, 0.0f, 0.0f};
+		final double vectordata[] = vector.getIJK();
+		final double newdata[] = new double[]{0.0, 0.0, 0.0};
 
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
-			for (int j = 0; j < 4; ++j)
+			for (int j = 0; j < 3; ++j)
 				newdata[i] += get(i, j) * vectordata[j];
 		}
-		result.setIJKL(newdata);
+		result.setIJK(newdata);
 		return result;
 	}
 	/**

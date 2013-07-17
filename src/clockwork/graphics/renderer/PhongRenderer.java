@@ -23,9 +23,6 @@
  */
 package clockwork.graphics.renderer;
 
-import clockwork.graphics.Vertex;
-
-
 
 public final class PhongRenderer extends PolygonRenderer
 {
@@ -35,25 +32,5 @@ public final class PhongRenderer extends PolygonRenderer
 	protected PhongRenderer()
 	{
 		super(Renderer.Type.Phong);
-	}
-
-	/**
-	 * TODO Implement me correctly!
-	 * @see Renderer#vertexProgram.
-	 */
-	@Override
-	public void vertexProgram(final Vertex input, final Vertex output)
-	{
-		// Calculate the fragment's position.
-		output.position.setXYZW(MODELVIEWPROJECTION.multiply(input.position));
-
-		/**
-		// TODO Calculate the vertex normal.
-//		fragment.setNormal(NORMAL.multiply(vertex.normal));
-//		vertex.calculateNormal(NORMAL);
-**/
-
-		// Calculate the fragment's surface normal.
-		output.normal.setIJK(NORMAL.multiply(input.normal));
 	}
 }
