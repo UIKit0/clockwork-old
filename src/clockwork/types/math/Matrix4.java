@@ -211,7 +211,7 @@ public final class Matrix4
 	 */
 	public static Matrix4 inverse(final Matrix4 input)
 	{
-		final Matrix4 output = new Matrix4(input);
+		final Matrix4 output = new Matrix4();
 		if (input != null)
 		{
 			final double s0 = input.get(0, 0) * input.get(1, 1) - input.get(1, 0) * input.get(0, 1);
