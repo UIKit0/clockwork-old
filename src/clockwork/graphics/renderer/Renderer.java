@@ -46,6 +46,7 @@ import clockwork.types.ConcurrentList;
 import clockwork.types.math.Matrix4;
 import clockwork.types.math.Point3f;
 import clockwork.types.math.Point4f;
+import clockwork.types.math.Vector3f;
 
 
 public abstract class Renderer
@@ -253,8 +254,7 @@ public abstract class Renderer
 					// Setup the NORMAL, MODEL, MODELVIEW and MODELVIEWPROJECTION transformations.
 					MODEL = currentRenderable.CMTM;
 					MODELVIEW = VIEW.multiply(MODEL);
-					NORMAL = RuntimeOptions.EnableNORMAL ?
-					Matrix4.inverse(MODELVIEW).transpose() : new Matrix4();
+					NORMAL = Matrix4.inverse(MODELVIEW).transpose();
 					MODELVIEWPROJECTION = VIEWPROJECTION.multiply(MODEL);
 
 					// Update debug variables.
@@ -302,7 +302,7 @@ public abstract class Renderer
 						position.x /= w;
 						position.y /= w;
 						position.z /= w;
-						position.w  = 1.0f;
+						position.w  = 1.0;
 					}
 
 					// Perform rasterisation on visible vertices.
@@ -379,6 +379,8 @@ public abstract class Renderer
 	public void vertexProgram(final Vertex input, final Vertex output)
 	{
 		output.position.setXYZW(MODELVIEWPROJECTION.multiply(input.position));
+		if (RuntimeOptions.EnableNORMAL)
+			output.normal.setIJK(Vector3f.normalise(NORMAL.multiply(input.normal)));
 	}
 	/**
 	 * The fragment program calculates a color value from a given fragment's attributes. By default,

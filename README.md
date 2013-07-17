@@ -17,10 +17,9 @@ as well as what you can expect.
 
 Execution
 ---------
-To compile and run this software, you will require a __Java Software Development 
-Kit__ (JDK) and __Apache Ant__ installed on the target computer. Simply launch
-'ant' without any arguments and the provided build script will take care of
-the rest.
+To compile and run this software, you will require a __Java Development Kit__ (JDK) 
+and __Apache Ant__ installed on the target computer. Simply launch '__ant__'
+without any arguments and the provided build script will take care of the rest.
 
 
 Layout

@@ -205,14 +205,53 @@ public final class Matrix4
 		return new Matrix4(newdata);
 	}
 	/**
-	 * TODO Implement this and remove 'deprecated' annotation.
-	 * Return the inverse of the given matrix.
-	 * @param matrix the matrix whose inverse we wish to calculate.
+	 * TODO Optimise: Replace get(i, j).
+	 * Return the inverse of the given matrix, courtesy of http://stackoverflow.com/q/2624422
+	 * @param input the matrix whose inverse we wish to calculate.
 	 */
-	@Deprecated
-	public static Matrix4 inverse(final Matrix4 matrix)
+	public static Matrix4 inverse(final Matrix4 input)
 	{
-		return new Matrix4(matrix);
+		final Matrix4 output = new Matrix4(input);
+		if (input != null)
+		{
+			final double s0 = input.get(0, 0) * input.get(1, 1) - input.get(1, 0) * input.get(0, 1);
+			final double s1 = input.get(0, 0) * input.get(1, 2) - input.get(1, 0) * input.get(0, 2);
+			final double s2 = input.get(0, 0) * input.get(1, 3) - input.get(1, 0) * input.get(0, 3);
+			final double s3 = input.get(0, 1) * input.get(1, 2) - input.get(1, 1) * input.get(0, 2);
+			final double s4 = input.get(0, 1) * input.get(1, 3) - input.get(1, 1) * input.get(0, 3);
+			final double s5 = input.get(0, 2) * input.get(1, 3) - input.get(1, 2) * input.get(0, 3);
+
+			final double c5 = input.get(2, 2) * input.get(3, 3) - input.get(3, 2) * input.get(2, 3);
+			final double c4 = input.get(2, 1) * input.get(3, 3) - input.get(3, 1) * input.get(2, 3);
+			final double c3 = input.get(2, 1) * input.get(3, 2) - input.get(3, 1) * input.get(2, 2);
+			final double c2 = input.get(2, 0) * input.get(3, 3) - input.get(3, 0) * input.get(2, 3);
+			final double c1 = input.get(2, 0) * input.get(3, 2) - input.get(3, 0) * input.get(2, 2);
+			final double c0 = input.get(2, 0) * input.get(3, 1) - input.get(3, 0) * input.get(2, 1);
+
+			final double invdet = 1.0 / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+			final double m[] = output.data;
+
+		    m[0]  = ( input.get(1, 1) * c5 - input.get(1, 2) * c4 + input.get(1, 3) * c3) * invdet;
+		    m[1]  = (-input.get(0, 1) * c5 + input.get(0, 2) * c4 - input.get(0, 3) * c3) * invdet;
+		    m[2]  = ( input.get(3, 1) * s5 - input.get(3, 2) * s4 + input.get(3, 3) * s3) * invdet;
+		    m[3]  = (-input.get(2, 1) * s5 + input.get(2, 2) * s4 - input.get(2, 3) * s3) * invdet;
+
+		    m[4]  = (-input.get(1, 0) * c5 + input.get(1, 2) * c2 - input.get(1, 3) * c1) * invdet;
+		    m[5]  = ( input.get(0, 0) * c5 - input.get(0, 2) * c2 + input.get(0, 3) * c1) * invdet;
+		    m[6]  = (-input.get(3, 0) * s5 + input.get(3, 2) * s2 - input.get(3, 3) * s1) * invdet;
+		    m[7]  = ( input.get(2, 0) * s5 - input.get(2, 2) * s2 + input.get(2, 3) * s1) * invdet;
+
+		    m[8]  = ( input.get(1, 0) * c4 - input.get(1, 1) * c2 + input.get(1, 3) * c0) * invdet;
+		    m[9]  = (-input.get(0, 0) * c4 + input.get(0, 1) * c2 - input.get(0, 3) * c0) * invdet;
+		    m[10] = ( input.get(3, 0) * s4 - input.get(3, 1) * s2 + input.get(3, 3) * s0) * invdet;
+		    m[11] = (-input.get(2, 0) * s4 + input.get(2, 1) * s2 - input.get(2, 3) * s0) * invdet;
+
+		    m[12] = (-input.get(1, 0) * c3 + input.get(1, 1) * c1 - input.get(1, 2) * c0) * invdet;
+		    m[13] = ( input.get(0, 0) * c3 - input.get(0, 1) * c1 + input.get(0, 2) * c0) * invdet;
+		    m[14] = (-input.get(3, 0) * s3 + input.get(3, 1) * s1 - input.get(3, 2) * s0) * invdet;
+		    m[15] = ( input.get(2, 0) * s3 - input.get(2, 1) * s1 + input.get(2, 2) * s0) * invdet;
+		}
+		return output;
 	}
 	/**
 	 * Return a translation matrix.

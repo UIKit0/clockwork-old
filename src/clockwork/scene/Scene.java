@@ -234,7 +234,7 @@ public final class Scene extends Observable
 			final RenderProcessingQueue queue = context.getRenderProcessingQueue();
 
 			// TODO Explain why this is done.
-			// Push the matrix that will transform objects to the origin.
+			// Push the matrix that will translate objects to the origin.
 			stack.push(Matrix4.translate(Point3f.negative(viewer.position)));
 
 			// Traverse the scene graph while converting nodes into processing elements, e.g.
