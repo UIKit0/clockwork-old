@@ -17,19 +17,17 @@ as well as what you can expect.
 
 Execution
 ---------
-This software includes a compiled __clockwork.jar__ in the dist (distribution)
-folder that can be directly executed, provided you have a Java Runtime 
-Environment (JRE) or Development Kit (JDK) installed on the target computer. 
-The source code can also be compiled and executed like any other Java application.
+To compile and run this software, you will require a __Java Software Development 
+Kit__ (JDK) and __Apache Ant__ installed on the target computer. Simply launch
+'ant' without any arguments and the provided build script will take care of
+the rest.
 
 
 Layout
 ------
 The folders provided with this software are structured in the following manner
 * __assets__ contains icons and sample models.
-* __bin__ contains compiled Java bytecode.
-* __dist__ contains a JAR file of the application.
 * __doc__ contains research, design and implementation documentation, as well as the Javadoc.
-* __lib__ contains external libraries that this application depends on.
+* __lib__ contains third-party libraries that this application depends on.
 * __src__ contains the source code tree.
 * __tst__ contains unit tests.

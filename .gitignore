@@ -1,12 +1,13 @@
-# Compiled binary files aren't necessary but the 'bin' folder is required during compilation.
-bin/*
+# Ignore compiled binary files.
+bin
 
 # Ignore Eclipse configuration files.
 .project
+.classpath
 
-# Ignore everything until source code, assets, and documentation are properly licensed.
-assets/*
-doc/*
-src/*
-tst/*
-lib/*
+# Ignore prototype code and assets.
+src/clockwork/prototype
+assets/prototype
+
+# Ignore documentation because it isn't licensed yet.
+doc

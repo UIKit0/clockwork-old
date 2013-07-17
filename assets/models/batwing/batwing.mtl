@@ -1,0 +1,58 @@
+#
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 6.3 x64 6.3.1.7959
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+#
+# Author: 3dregenerator
+# Source: http://tf3dm.com/3d-model/batwing-30253.html
+#
+
+newmtl Batwing_Tpage
+Ka 1 1 1
+Kd 0.588 0.588 0.588
+Ks 1 1 1
+illum 2
+Ns 10
+map_Kd batwing.diffuse.jpg
+map_kS batwing.specular.jpg
+map_kA batwing.specular.jpg
+map_bump batwing.normal.jpg
+bump batwing.normal.jpg
+map_opacity
+map_d
+refl
+map_Ns
+
+newmtl Batmobile_Glass
+Ka 0.588 0.588 0.588
+Kd 0.588 0.588 0.588
+Ks 0 0 0
+illum 2
+Ns 10
+d 0.25
+map_Kd
+map_bump
+bump
+map_opacity
+map_d
+refl
+map_kS
+map_kA
+map_Ns
+
+newmtl Explorer_Default
+Ka 0.117647 0.117647 0.117647
+Kd 0.752941 0.752941 0.752941
+Ks 0.752941 0.752941 0.752941
+illum 2
+Ns 8
+map_Kd
+map_bump
+bump
+map_opacity
+map_d
+refl
+map_kS
+map_kA
+map_Ns
