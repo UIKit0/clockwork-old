@@ -25,14 +25,8 @@ package clockwork.graphics.color;
 
 import java.util.Random;
 
-
-
 public class ColorRGB
 {
-	/**
-	 * The color channels.
-	 */
-	public static enum Channel {R, G, B}
 	/**
 	 * The red channel.
 	 */
@@ -73,41 +67,6 @@ public class ColorRGB
 	 */
 	public ColorRGB()
 	{}
-	/**
-	 * Return the value of a specified channel.
-	 */
-	public double getChannel(final Channel channel)
-	{
-		switch (channel)
-		{
-			case R:
-				return r;
-			case G:
-				return g;
-			case B:
-				return b;
-			default:
-				return 0;
-		}
-	}
-	/**
-	 * Set the value of a specified channel.
-	 */
-	public void setChannel(final Channel channel, final double value)
-	{
-		switch (channel)
-		{
-			case R:
-				r = value;
-			break;
-			case G:
-				g = value;
-			break;
-			case B:
-				b = value;
-			break;
-		}
-	}
 	/**
 	 * Merge the 3 channels to form a 32 bit integer RGB color.
 	 */
@@ -151,10 +110,9 @@ public class ColorRGB
 		if (rgb == 0)
 			return new ColorRGB();
 
-		final double tmp = 1.0f / 255.0f;
-		final double r = ((rgb >> 16) & 0xff) * tmp;
-		final double g = ((rgb >>  8) & 0xff) * tmp;
-		final double b =  (rgb        & 0xff) * tmp;
+		final double r = ((rgb >> 16) & 0xff) * 0.00392156862; // 0.00392156862 = (1/255).
+		final double g = ((rgb >>  8) & 0xff) * 0.00392156862;
+		final double b =  (rgb        & 0xff) * 0.00392156862;
 
 		return new ColorRGB(r, g, b);
 	}
@@ -184,40 +142,37 @@ public class ColorRGB
 	 */
 	public static ColorRGB getRandomColor()
 	{
-		double r = random.nextFloat();
-		double g = random.nextFloat();
-		double b = random.nextFloat();
+		double r = random.nextDouble();
+		double g = random.nextDouble();
+		double b = random.nextDouble();
 
 		return new ColorRGB(r, g, b);
 	}
 	/**
-	 * Multiply the color by a value.
+	 * Multiply this color by a value.
 	 */
 	public ColorRGB multiply(final double value)
 	{
-		return new ColorRGB
-		(
-			r * value,
-			g * value,
-			b * value
-		);
+		this.r *= value;
+		this.g *= value;
+		this.b *= value;
+		return this;
 	}
 	/**
 	 * Add a color to this color.
 	 */
 	public ColorRGB add(final ColorRGB that)
 	{
-		return new ColorRGB
-		(
-			r + that.r,
-			g + that.g,
-			b + that.b
-		);
+		if (that != null)
+		{
+			this.r += that.r;
+			this.g += that.g;
+			this.b += that.b;
+		}
+		return this;
 	}
-
-
 	/**
-	 * Convert the color into a string.
+	 * Convert the color data into a string.
 	 */
 	@Override
 	public String toString()
@@ -227,15 +182,9 @@ public class ColorRGB
 
 
 
-	public static final ColorRGB Black	= new ColorRGB(0.0f, 0.0f, 0.0f);
-	public static final ColorRGB Red	= new ColorRGB(1.0f, 0.0f, 0.0f);
-	public static final ColorRGB Green	= new ColorRGB(0.0f, 1.0f, 0.0f);
-	public static final ColorRGB Blue	= new ColorRGB(0.0f, 0.0f, 1.0f);
-	public static final ColorRGB White = new ColorRGB(1.0f, 1.0f, 1.0f);
-
-
-	public static final ColorRGB BRIGHT_GRAY = new ColorRGB(0xbf/0xff, 0xbf/0xff, 0xbf/0xff);
-	public static final ColorRGB MEDIUM_GRAY = new ColorRGB(0x7f/0xff, 0x7f/0xff, 0x7f/0xff);
-	public static final ColorRGB DARK_GRAY = new ColorRGB(0x3f/0xff, 0x3f/0xff, 0x3f/0xff);
-	public static final ColorRGB AQUA = new ColorRGB(0x00, 0x8c/0xff, 0x8c/0xff);
+	public static final ColorRGB Black	= new ColorRGB(0.0, 0.0, 0.0);
+	public static final ColorRGB Red	   = new ColorRGB(1.0, 0.0, 0.0);
+	public static final ColorRGB Green	= new ColorRGB(0.0, 1.0, 0.0);
+	public static final ColorRGB Blue	= new ColorRGB(0.0, 0.0, 1.0);
+	public static final ColorRGB White  = new ColorRGB(1.0, 1.0, 1.0);
 }
