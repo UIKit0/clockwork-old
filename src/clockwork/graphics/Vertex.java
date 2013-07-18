@@ -26,13 +26,9 @@ package clockwork.graphics;
 import java.util.LinkedHashSet;
 
 import clockwork.graphics.color.ColorRGBA;
-import clockwork.types.math.Matrix4;
 import clockwork.types.math.Point3f;
 import clockwork.types.math.Point4f;
 import clockwork.types.math.Vector3f;
-
-
-
 
 public final class Vertex implements Comparable<Vertex>
 {
@@ -52,7 +48,7 @@ public final class Vertex implements Comparable<Vertex>
 	/**
 	 * The vertex's color.
 	 */
-	public final ColorRGBA color = new ColorRGBA(1.0f, 1.0f, 1.0f);
+	public final ColorRGBA color = new ColorRGBA(1.0, 1.0, 1.0);
 	/**
 	 * The set of polygon faces that this vertex belongs to.
 	 */
@@ -127,18 +123,6 @@ public final class Vertex implements Comparable<Vertex>
 	{
 		if (face != null)
 			faces.add(face);
-	}
-	/**
-	 * TODO Implement me.
-	 * Calculate and store the vertex's normal.
-	 * @param NORMAL the NORMAL transformation matrix.
-	 */
-	public void calculateNormal(final Matrix4 NORMAL)
-	{
-		calculateNormal();
-
-//		this.normal.setXYZW(NORMAL.multiply(this.normal.getXYZW()));
-//		this.normal.normalise();
 	}
 	/**
 	 * Calculate and store the vertex's normal.

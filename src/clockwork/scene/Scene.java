@@ -240,6 +240,7 @@ public final class Scene extends Observable
 			// Traverse the scene graph while converting nodes into processing elements, e.g.
 			// Renderables then adding them to the render queue. When the queue is built, apply
 			// the renderer.
+			queue.clear();
 			graph.buildRenderProcessingQueue(VIEW, stack, queue);
 			context.applyRenderer();
 

@@ -23,6 +23,8 @@
  */
 package clockwork.physics.lighting;
 
+import clockwork.graphics.Fragment;
+import clockwork.graphics.Material;
 import clockwork.graphics.color.ColorRGB;
 import clockwork.graphics.renderer.RenderProcessingQueue;
 import clockwork.scene.SceneEntityProperty;
@@ -40,8 +42,28 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	public static enum ReflectionModel
 	{
-		Phong,
-		BlinnPhong
+		Phong("Phong"),
+		BlinnPhong("Blinn-Phong");
+		/**
+		 * The reflection model's title.
+		 */
+		private final String title;
+		/**
+		 * Instantiate a reflection model with a given title.
+		 * @param title the reflection model's title.
+		 */
+		ReflectionModel(final String title)
+		{
+			this.title = title;
+		}
+		/**
+		 * Convert the reflection model data into a string.
+		 */
+		@Override
+		public String toString()
+		{
+			return title;
+		}
 	}
 	/**
 	 * The type of emitted light.
@@ -62,13 +84,17 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	private final Orientation direction;
 	/**
+	 * The reflection model used by this light.
+	 */
+	private ReflectionModel reflectionModel = ReflectionModel.Phong;
+	/**
 	 * The type of this light.
 	 */
-	private LightEmitter.Type type;
+	private LightEmitter.Type type = Type.Ambient;
 	/**
-	 * The color of the emitted light.
+	 * The color intensity of the emitted light.
 	 */
-	private final ColorRGB color = new ColorRGB(1.0, 1.0, 1.0);
+	private final ColorRGB color = new ColorRGB(0.1, 0.1, 0.1);
 	/**
 	 * Instantiate a light emitter attached to an object and a given type of emission and color.
 	 * @param object the object that holds this light property.
@@ -95,7 +121,7 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	public LightEmitter(final SceneObject object, final LightEmitter.Type type)
 	{
-		this(object, type, new ColorRGB(1.0, 1.0, 1.0));
+		this(object, type, null);
 	}
 	/**
 	 * Instantiate an ambient white light emitter attached to an object.
@@ -103,7 +129,14 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	public LightEmitter(final SceneObject object)
 	{
-		this(object, LightEmitter.Type.Ambient, new ColorRGB(1.0, 1.0, 1.0));
+		this(object, LightEmitter.Type.Ambient);
+	}
+	/**
+	 * Return the color of the light.
+	 */
+	public ColorRGB getColor()
+	{
+		return color;
 	}
 	/**
 	 * Set the color of the light.
@@ -112,13 +145,6 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	public void setColor(final ColorRGB color)
 	{
 		this.color.copy(color);
-	}
-	/**
-	 * Return the color of the light.
-	 */
-	public ColorRGB getColor()
-	{
-		return color;
 	}
 	/**
 	 * Return the type of emission.
@@ -134,12 +160,48 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	{
 		this.type = type;
 	}
+	/**
+	 * Return the reflection model used by this emitter.
+	 */
+	public LightEmitter.ReflectionModel getReflectionModel()
+	{
+		return reflectionModel;
+	}
+	/**
+	 * Set the reflection model used by this emitter.
+	 * @param model the reflection model to set.
+	 */
+	public void setReflectionModel(final LightEmitter.ReflectionModel model)
+	{
+		this.reflectionModel = model;
+	}
+	/**
+	 * Return the color intensity of a given fragment when this light is applied to it.
+	 */
+	public ColorRGB calculateFragmentColor(final Fragment fragment, final Material material)
+	{
+		final ColorRGB intensity = new ColorRGB();
+
+		// Calculate the ambient contribution.
+		if (type == LightEmitter.Type.Ambient)
+		{
+			intensity.r = color.r * material.Ka.r;
+			intensity.g = color.g * material.Ka.g;
+			intensity.b = color.b * material.Ka.b;
+		}
+		else
+		{
+
+
+		}
+		return intensity;
+	}
+	/**
+	 * @see SceneGraph.Node#update
+	 */
 	@Override
 	public void update(float dt)
-	{
-		// TODO Auto-generated method stub
-
-	}
+	{}
 	/**
 	 * @see SceneGraph.Node#buildRenderProcessingQueue
 	 */
@@ -151,10 +213,9 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 		final RenderProcessingQueue queue
 	)
 	{
-		// TODO Auto-generated method stub
-
+		if (!isPruned())
+			queue.add(this);
 	}
-
 	/**
 	 * Return the rigid body's state.
 	 */

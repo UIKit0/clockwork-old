@@ -23,6 +23,11 @@
  */
 package clockwork.graphics.renderer;
 
+import clockwork.graphics.Fragment;
+import clockwork.graphics.color.ColorRGB;
+import clockwork.physics.lighting.LightEmitter;
+import clockwork.system.RuntimeOptions;
+
 
 public final class PhongRenderer extends PolygonRenderer
 {
@@ -32,5 +37,21 @@ public final class PhongRenderer extends PolygonRenderer
 	protected PhongRenderer()
 	{
 		super(Renderer.Type.Phong);
+	}
+	/**
+	 * @see Renderer#fragmentProgram.
+	 */
+	@Override
+	public int fragmentProgram(final Fragment fragment)
+	{
+		if (RuntimeOptions.EnableLighting)
+		{
+			final ColorRGB intensity = new ColorRGB();
+			for (final LightEmitter light : lights)
+				intensity.add(light.calculateFragmentColor(fragment, inputMaterial));
+
+			return intensity.merge();
+		}
+		return fragment.getColor();
 	}
 }

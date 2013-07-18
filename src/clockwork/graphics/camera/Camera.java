@@ -25,6 +25,7 @@ package clockwork.graphics.camera;
 
 import clockwork.graphics.camera.projection.Projection;
 import clockwork.graphics.camera.projection.ProjectionFactory;
+import clockwork.physics.lighting.LightEmitter;
 import clockwork.scene.SceneViewer;
 import clockwork.types.math.Matrix4;
 import clockwork.types.math.Orientation;
@@ -44,6 +45,26 @@ public class Camera extends SceneViewer
 	 */
 	private final Frustum frustum = new Frustum();
 	/**
+	 * Instantiate a camera with a given position, orientation, viewport,
+	 * frustum and projection.
+	 */
+	public Camera
+	(
+		final String name,
+		final Point3f position,
+		final Orientation orientation,
+		final Viewport viewport,
+		final Frustum frustum,
+		final Projection.Type projection
+	)
+	{
+		super(name, position, orientation, DEFAULT_UP);
+		setViewport(viewport);
+		setFrustum(frustum);
+		setProjection(projection);
+		addChild(new LightEmitter(this));
+	}
+	/**
 	 * Instantiate a camera with a given position, orientation, viewport and frustum.
 	 */
 	public Camera
@@ -55,9 +76,7 @@ public class Camera extends SceneViewer
 		final Frustum frustum
 	)
 	{
-		super(name, position, orientation, DEFAULT_UP);
-		setViewport(viewport);
-		setFrustum(frustum);
+		this(name, position, orientation, viewport, frustum, ProjectionFactory.getDefaultProjection().getType());
 	}
 	/**
 	 * Instantiate a camera with a given position, orientation, viewport and projection.
@@ -68,12 +87,10 @@ public class Camera extends SceneViewer
 		final Point3f position,
 		final Orientation orientation,
 		final Viewport viewport,
-		final Projection.Type projectionType
+		final Projection.Type projection
 	)
 	{
-		super(name, position, orientation, DEFAULT_UP);
-		setViewport(viewport);
-		setProjection(projectionType);
+		this(name, position, orientation, viewport, null, projection);
 	}
 	/**
 	 * Instantiate a camera with a given position, orientation and viewport.
