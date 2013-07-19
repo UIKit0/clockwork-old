@@ -35,7 +35,7 @@ public class RendererFactory
 	/**
 	 * The type of the default renderer.
 	 */
-	public static Renderer.Type DEFAULT_RENDERER_TYPE = Renderer.Type.Wireframe;
+	public static Renderer.Type DEFAULT_RENDERER_TYPE = Renderer.Type.Phong;
 	/**
 	 * The renderers.
 	 */

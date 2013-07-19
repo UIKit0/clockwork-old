@@ -47,6 +47,6 @@ public final class Light extends RigidBody
 	 */
 	public Light(final String name)
 	{
-		this(name, LightEmitter.Type.Ambient);
+		this(name, LightEmitter.Type.Spot);
 	}
 }

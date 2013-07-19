@@ -34,6 +34,7 @@ import clockwork.types.Matrix4Stack;
 import clockwork.types.math.Matrix4;
 import clockwork.types.math.Orientation;
 import clockwork.types.math.Point3f;
+import clockwork.types.math.Vector3f;
 
 public class LightEmitter extends SceneEntityProperty<SceneObject>
 {
@@ -70,7 +71,6 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	public static enum Type
 	{
-		Ambient,
 		Point,
 		Spot,
 		Directional,
@@ -86,15 +86,15 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	/**
 	 * The reflection model used by this light.
 	 */
-	private ReflectionModel reflectionModel = ReflectionModel.Phong;
+	private ReflectionModel reflectionModel = ReflectionModel.BlinnPhong;
 	/**
 	 * The type of this light.
 	 */
-	private LightEmitter.Type type = Type.Ambient;
+	private LightEmitter.Type type = Type.Spot;
 	/**
 	 * The color intensity of the emitted light.
 	 */
-	private final ColorRGB color = new ColorRGB(0.1, 0.1, 0.1);
+	private final ColorRGB color = new ColorRGB(1.0, 1.0, 1.0);
 	/**
 	 * Instantiate a light emitter attached to an object and a given type of emission and color.
 	 * @param object the object that holds this light property.
@@ -129,7 +129,7 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	 */
 	public LightEmitter(final SceneObject object)
 	{
-		this(object, LightEmitter.Type.Ambient);
+		this(object, LightEmitter.Type.Spot);
 	}
 	/**
 	 * Return the color of the light.
@@ -178,23 +178,113 @@ public class LightEmitter extends SceneEntityProperty<SceneObject>
 	/**
 	 * Return the color intensity of a given fragment when this light is applied to it.
 	 */
-	public ColorRGB calculateFragmentColor(final Fragment fragment, final Material material)
+	public ColorRGB calculateFragmentColor
+	(
+		final Point3f viewpoint,
+		final Fragment fragment,
+		final Material material
+	)
 	{
-		final ColorRGB intensity = new ColorRGB();
+		final ColorRGB ambient = new ColorRGB();
+		final ColorRGB diffuse = new ColorRGB();
+		final ColorRGB specular = new ColorRGB();
+
+		// The surface position P and normal N.
+		final Point3f  P = new Point3f(fragment.x, fragment.y, fragment.z);
+		final Vector3f N = new Vector3f(fragment.ni, fragment.nj, fragment.nk);
+
+		// The unit vector originating from the surface position, directed towards the viewpoint.
+//FIXME Find out why this doesn't work: final Vector3f V = Vector3f.normalise(P.subtract(viewpoint));
+		final Vector3f V = Vector3f.normalise(viewpoint.subtract(P));
+
+		// The unit vector originating from the surface position, directed towards this light source.
+		final Vector3f L = Vector3f.normalise(P.subtract(this.position));
+
+		// Calculate the light's attenuation factor.
+		final double fatt = type != LightEmitter.Type.Directional ?
+		getAttenuationFactor(Point3f.distance(P, this.position)) : 1.0;
+
+		// The material's ambient, diffuse and specular colors.
+		final ColorRGB Oa = material.ambient != null ?
+		ColorRGB.split(material.ambient.getTexel(fragment.u, fragment.v)) : ColorRGB.White;
+		final ColorRGB Od = material.diffuse != null ?
+		ColorRGB.split(material.diffuse.getTexel(fragment.u, fragment.v)) : ColorRGB.White;
+		final ColorRGB Os = material.specular != null ?
+		ColorRGB.split(material.specular.getTexel(fragment.u, fragment.v)) : ColorRGB.White;
 
 		// Calculate the ambient contribution.
-		if (type == LightEmitter.Type.Ambient)
-		{
-			intensity.r = color.r * material.Ka.r;
-			intensity.g = color.g * material.Ka.g;
-			intensity.b = color.b * material.Ka.b;
-		}
-		else
-		{
+		ambient.r = material.Ka.r * Oa.r * Od.r;
+		ambient.g = material.Ka.g * Oa.g * Od.g;
+		ambient.b = material.Ka.b * Oa.b * Od.b;
 
+		// Calculate the diffuse contribution.
+		final double diffuseFactor = N.dot(L);
+		if (diffuseFactor > 0)
+		{
+			diffuse.r = diffuseFactor * material.Kd.r * Od.r;
+			diffuse.g = diffuseFactor * material.Kd.g * Od.g;
+			diffuse.b = diffuseFactor * material.Kd.b * Od.b;
 
+			// Calculate the specular contribution.
+			final double specularFactor = getSpecularFactor(N, L, V, material.shininess);
+			specular.r = specularFactor * material.Ks.r * Os.r;
+			specular.g = specularFactor * material.Ks.g * Os.g;
+			specular.b = specularFactor * material.Ks.b * Os.b;
 		}
-		return intensity;
+		// Add all contributions.
+		return new ColorRGB
+		(
+			ambient.r + ((diffuse.r + specular.r) * fatt * color.r),
+			ambient.g + ((diffuse.g + specular.g) * fatt * color.g),
+			ambient.b + ((diffuse.b + specular.b) * fatt * color.b)
+		);
+	}
+	/**
+	 * Return this light's specular factor.
+	 * @param N the surface normal.
+	 * @param L the light's direction vector.
+	 * @param V the view vector.
+	 * @param shininess the material's shininess.
+	 */
+	private double getSpecularFactor
+	(
+		final Vector3f N,
+		final Vector3f L,
+		final Vector3f V,
+		final double shininess
+	)
+	{
+		double gamma = 0;
+
+		if (this.reflectionModel == ReflectionModel.Phong)
+		{
+			// Phong reflection model.
+			final Vector3f R = new Vector3f();// FIXME Vector3f.normalise(new Vector3f(L, N.multiply(2.0 * N.dot(L))));
+			gamma = Math.max(0, R.dot(V));
+		}
+		else if (this.reflectionModel == ReflectionModel.BlinnPhong)
+		{
+			// Blinn-Phong shading model.
+			final Vector3f H = Vector3f.normalise(new Vector3f(L.i + V.i, L.j + V.j, L.k + V.k));
+			gamma = N.dot(H);
+		}
+		return (gamma != 0.0 ? Math.pow(gamma, shininess) : 1.0);
+	}
+
+	private final double constantAttenuationCoefficient = 0.2;
+	private final double linearAttenuationCoefficient = 0.5;
+	private final double quadraticAttenuationCoefficient = 0.8;
+	/**
+	 * Return the light's attenuation factor.
+	 * @param distance the distance between this light and the surface to be lighted.
+	 */
+	public double getAttenuationFactor(final double distance)
+	{
+		final double c1 = constantAttenuationCoefficient;
+		final double c2 = linearAttenuationCoefficient * distance;
+		final double c3 = quadraticAttenuationCoefficient * distance * distance;
+
+		return Math.min(1.0, 1.0 / (c1 + c2 + c3));
 	}
 	/**
 	 * @see SceneGraph.Node#update

@@ -48,7 +48,7 @@ public final class PhongRenderer extends PolygonRenderer
 		{
 			final ColorRGB intensity = new ColorRGB();
 			for (final LightEmitter light : lights)
-				intensity.add(light.calculateFragmentColor(fragment, inputMaterial));
+				intensity.add(light.calculateFragmentColor(super.viewpoint, fragment, inputMaterial));
 
 			return intensity.merge();
 		}

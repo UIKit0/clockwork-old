@@ -89,4 +89,11 @@ public class Orientation
 	{
 		return new Point3f(roll, yaw, pitch);
 	}
+	/**
+	 * Convert the orientation to a 3D vector.
+	 */
+	public Vector3f toVector3f()
+	{
+		return new Vector3f(roll, yaw, pitch);
+	}
 }
