@@ -1,3 +1,20 @@
+DISCLAIMER!
+-----------
+
+This project is no longer maintained and a more recent version can be found 
+__[here](https://github.com/supranove/clockwork)__.
+
+Swing is a pretty good GUI toolkit but it is rather outdated, and this shows when building
+complex GUIs. As such, I'm moving on to Qt/C++.
+
+Huh, Qt/C++? That's too radical a change. Why not switch to JavaFX? Well because my primary
+concern was writing a platform-agnostic application and it just so turns out that Qt offers
+this possibility. Secondly, I'm much more comfortable programming in C/C++ (go figure...).
+Lastly, and most importantly, there's no overhead introduced when writing C++ code as opposed
+to the Java bytecode-to-virtual-machine pipeline. This lack of overhead is a plus since 
+Clockwork is not hardware-accelerated, which means that it should run faster in the C++ implementation.
+
+
 CLOCKWORK
 =========
 
@@ -10,9 +27,8 @@ ironed out, although I assure you that none of them will attempt to find the
 answer to life, launch nuclear ABMs or, more realistically, destroy the
 content of your hard drive.
 
-Check out __clockwork.implementation.pdf__ included in the software documentation
-for a detailed description of the application's features and their implementations,
-as well as what you can expect.
+Check out the software documentation for a detailed description of the application's
+features and their implementations, as well as what you can expect.
 
 
 Execution
